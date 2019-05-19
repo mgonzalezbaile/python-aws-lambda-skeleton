@@ -1,0 +1,43 @@
+service: serverless-python-skeleton
+
+provider:
+  name: aws
+  runtime: python3.7
+  region: eu-west-1
+#  vpc:
+#    securityGroupIds:
+#      - sg-XXXXXXX
+#    subnetIds:
+#      - subnet-XXXXXX
+#      - subnet-XXXXXX
+#      - subnet-XXXXXX
+  environment:
+    env: ${opt:stage}
+
+functions:
+  health:
+    handler: app/health_lambda/handler.handle
+    events:
+      - http: ANY /health
+
+  some_lambda:
+    handler: app/some_lambda/handler.handle
+    events:
+      - http: ANY /some-lambda
+
+  another_lambda:
+    handler: app/another_lambda/handler.handle
+    events:
+      - http: ANY /another-lambda
+
+plugins:
+  - serverless-offline
+  - serverless-python-requirements
+
+custom:
+  serverless-offline:
+    host: 0.0.0.0
+
+  pythonRequirements:
+    noDeploy: []
+    dockerizePip: false

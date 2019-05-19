@@ -1,0 +1,24 @@
+version: '3'
+services:
+  lambdas:
+    build:
+      context: ../.
+      dockerfile: docker/Dockerfile
+      args:
+        - AWS_ACCESS_KEY_ID
+        - AWS_ACCESS_KEY_SECRET
+    container_name: lambdas
+    image: lambdas
+    working_dir: /var/task
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../:/var/task
+    command: sls --stage local offline start
+    user: ${CURRENT_UID}
+    networks:
+      - common
+
+networks:
+  common:
+    external: true

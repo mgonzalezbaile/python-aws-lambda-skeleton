@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+files=$(git diff --cached --name-only | grep "secrets/.*\.yml")
+for filename in $files; do
+    is_secret_encrypted=$(cat $filename | grep '\$ANSIBLE_VAULT;')
+    if [[ -z "${is_secret_encrypted}" ]]; then
+        echo ERROR: Trying to commit decrypted file $filename
+        exit 1
+    fi
+done
+exit 0
